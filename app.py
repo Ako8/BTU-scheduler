@@ -1,7 +1,9 @@
+import os
+
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-import config
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
@@ -9,9 +11,13 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 db = SQLAlchemy(app)
 
 
+def configure():
+    load_dotenv()
+
+
 @app.route("/", methods=["GET", "POST"])
 def home():
-    print(config.api_key)
+    print(os.getenv('api_key'))
     htmls = []
     if request.method == "POST":
         html_txt = request.form.get("url")
@@ -43,4 +49,5 @@ def home():
 
 
 if __name__ == "__main__":
+    configure()
     app.run(debug=True)
